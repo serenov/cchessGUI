@@ -3,6 +3,7 @@
 #include "render.h"
 #include "config.h"
 #include "events.h"
+#include "interface.h"
 
 const int FPS = 60;
 const int FRAME_DELAY = 1000 / FPS;
@@ -11,6 +12,8 @@ const int FRAME_DELAY = 1000 / FPS;
 int main(int argc, char* args[]) {
     SDL_Window* window = NULL;
     SDL_Renderer* renderer = NULL;
+
+    ccInterfaceInit();
 
     // Initialize SDL and create window and renderer
     if (!init(&window, &renderer, SCREEN_WIDTH, SCREEN_HEIGHT)) {

@@ -23,7 +23,7 @@ BoardSquare* getCurrentSqaure() {
     return currentSelectedSquare;
 }
 
-void setPieceOnSquare(Piece* piece, int x, int y) {
+void setPieceOnSquare(Piece_GUI* piece, int x, int y) {
     int position = y * 8 + x;
 
     globalBoard[position].piece = piece;
@@ -35,12 +35,12 @@ void setCurrentPieceOnSquare(int x, int y) {
     setPieceOnSquare(currentSelectedSquare->piece, x, y);
 }
 
-Piece* emptyPieceOnSquare(int x, int y) {
+Piece_GUI* emptyPieceOnSquare(int x, int y) {
     int position = y * 8 + x;
 
     if(globalBoard[position].piece == NULL) return NULL;
 
-    Piece* pieceAtSquare = globalBoard[position].piece;
+    Piece_GUI* pieceAtSquare = globalBoard[position].piece;
 
     globalBoard[position].piece = NULL;
 
@@ -48,7 +48,7 @@ Piece* emptyPieceOnSquare(int x, int y) {
 }
 
 void destroyPieceOnSquare(int x, int y) {
-    Piece* unwantedPiece = emptyPieceOnSquare(x, y);
+    Piece_GUI* unwantedPiece = emptyPieceOnSquare(x, y);
 
     if(unwantedPiece == NULL) return; 
 
@@ -70,7 +70,7 @@ void setCurrentSquareFromUI(int x, int y) {
 void tracePieceWithMouse(int x, int y) {
     if(currentSelectedSquare == NULL) return;
 
-    Piece* currentPiece = currentSelectedSquare->piece;
+    Piece_GUI* currentPiece = currentSelectedSquare->piece;
 
     currentPiece->rectangle.x = x - (UNIT / 2);
     currentPiece->rectangle.y =  y - (UNIT / 2);
@@ -113,7 +113,7 @@ void settlePieceOnSquareFromUI(int x, int y) {
 
     Coordinates boardCoords = transformToBoardCoordinates(x, y);
 
-    Piece* currentPiece = currentSelectedSquare->piece;
+    Piece_GUI* currentPiece = currentSelectedSquare->piece;
 
     int previousPosition = currentSelectedSquare->index;
 
@@ -148,8 +148,8 @@ void settlePieceOnSquareFromUI(int x, int y) {
     tracedSquare.y = -100; 
 }
 
-Piece* generatePiece(PieceType type, Color clr, int x, int y) {
-    Piece* piece = (Piece*) malloc(sizeof(Piece));
+Piece_GUI* generatePiece(PieceType_GUI type, Color_GUI clr, int x, int y) {
+    Piece_GUI* piece = (Piece_GUI*) malloc(sizeof(Piece_GUI));
 
     piece->clr = clr;
 
@@ -171,55 +171,55 @@ void sanityCheckFEN() {
 }
 
 void createAndPutPiece(char pieceChar, int x, int y) {
-    Piece* generatedPiece = NULL;
+    Piece_GUI* generatedPiece = NULL;
     switch (pieceChar)
     {
     case 'k':
-        generatedPiece = generatePiece(King, Black, x, y);
+        generatedPiece = generatePiece(King_GUI, Black, x, y);
         break;
     
     case 'q':
-        generatedPiece = generatePiece(Queen, Black, x, y);
+        generatedPiece = generatePiece(Queen_GUI, Black, x, y);
         break;
     
     case 'r':
-        generatedPiece = generatePiece(Rook, Black, x, y);
+        generatedPiece = generatePiece(Rook_GUI, Black, x, y);
         break;
     
     case 'b':
-        generatedPiece = generatePiece(Bishop, Black, x, y);
+        generatedPiece = generatePiece(Bishop_GUI, Black, x, y);
         break;
     
     case 'n':
-        generatedPiece = generatePiece(Knight, Black, x, y);
+        generatedPiece = generatePiece(Knight_GUI, Black, x, y);
         break;
     
     case 'p':
-        generatedPiece = generatePiece(Pawn, Black, x, y);
+        generatedPiece = generatePiece(Pawn_GUI, Black, x, y);
         break;
 
     case 'K':
-        generatedPiece = generatePiece(King, White, x, y);
+        generatedPiece = generatePiece(King_GUI, White, x, y);
         break;
     
     case 'Q':
-        generatedPiece = generatePiece(Queen, White, x, y);
+        generatedPiece = generatePiece(Queen_GUI, White, x, y);
         break;
     
     case 'R':
-        generatedPiece = generatePiece(Rook, White, x, y);
+        generatedPiece = generatePiece(Rook_GUI, White, x, y);
         break;
     
     case 'B':
-        generatedPiece = generatePiece(Bishop, White, x, y);
+        generatedPiece = generatePiece(Bishop_GUI, White, x, y);
         break;
     
     case 'N':
-        generatedPiece = generatePiece(Knight, White, x, y);
+        generatedPiece = generatePiece(Knight_GUI, White, x, y);
         break;
     
     case 'P':
-        generatedPiece = generatePiece(Pawn, White, x, y);
+        generatedPiece = generatePiece(Pawn_GUI, White, x, y);
         break;
     
      

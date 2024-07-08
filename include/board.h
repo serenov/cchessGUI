@@ -5,7 +5,7 @@
 
 typedef struct {
     Uint32 index;
-    Piece* piece;
+    Piece_GUI* piece;
     bool isSelected;
     bool isMovedInto;
 } BoardSquare;
@@ -23,11 +23,11 @@ BoardSquare* getCurrentSqaure();
 
 SDL_Rect* getTracedSquare(); 
 
-void setPieceOnSquare(Piece* piece, int x, int y);
+void setPieceOnSquare(Piece_GUI* piece, int x, int y);
 
 void setCurrentPieceOnSquare(int x, int y);
 
-Piece* emptyPieceOnSquare(int x, int y);
+Piece_GUI* emptyPieceOnSquare(int x, int y);
 
 void destroyPieceOnSquare(int x, int y);
 

@@ -18,6 +18,7 @@ set(SOURCES
     src/board.c
     src/render.c
     src/main.c
+    src/interface.c
 )
 
 # Find SDL2 package

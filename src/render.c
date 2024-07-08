@@ -135,7 +135,7 @@ void renderTheGame(SDL_Renderer* renderer) {
         BoardSquare* square = getSqaure(i % 8, i / 8);
 
         
-        Piece* pieceAtSquare = square->piece;
+        Piece_GUI* pieceAtSquare = square->piece;
         
 
         if(pieceAtSquare != NULL && !square->isSelected) {

@@ -18,7 +18,7 @@ int spriteOffsets[][2] = {
 
 SDL_Rect globalRect = { 0, 0, SPRITE_FRAME_SIZE, SPRITE_FRAME_SIZE };
 
-SDL_Rect *getClipRectForPiece(Piece *piece) {
+SDL_Rect *getClipRectForPiece(Piece_GUI *piece) {
     int index = piece->type + piece->clr * 6;
     
     globalRect.x = spriteOffsets[index][0];
