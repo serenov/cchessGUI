@@ -6,6 +6,7 @@
 #define PIECE_SIZE 100 
 #define CHESSBOARD_IMAGE_PATH "../assets/chessboard1.jpg"
 #define SPRITES_PATH "../assets/Sprites.png"
+#define HOVER_BG "../assets/hoverbg.png"
 #define BOARD_LENGTH 64
 #define UNIT (SCREEN_SIZE / 8)
 

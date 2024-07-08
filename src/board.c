@@ -1,19 +1,17 @@
+#include "board.h"
 #include "config.h"
 #include "piece.h"
 #include "utils.h"
 
 #include <stdbool.h>
 
-typedef struct {
-    Uint32 index;
-    Piece* piece;
-    bool isSelected;
-    bool isMovedInto;
-} BoardSquare;
-
 BoardSquare globalBoard[64];
 
 BoardSquare* currentSelectedSquare = NULL;
+
+SDL_Rect tracedSquare = { -100, -100, UNIT, UNIT };
+
+LatestMove latestMove = { {-100, -100, UNIT, UNIT}, {-100, -100, UNIT, UNIT} };
 
 BoardSquare* getSqaure(int x, int y) {
     int position = y * 8 + x;
@@ -75,7 +73,16 @@ void tracePieceWithMouse(int x, int y) {
     Piece* currentPiece = currentSelectedSquare->piece;
 
     currentPiece->rectangle.x = x - (UNIT / 2);
-    currentPiece->rectangle.y = y - (UNIT / 2);
+    currentPiece->rectangle.y =  y - (UNIT / 2);
+
+   tracedSquare.x = (x / UNIT) * UNIT; 
+   tracedSquare.y = (y / UNIT) * UNIT; 
+}
+
+SDL_Rect* getTracedSquare() {
+    if(currentSelectedSquare == NULL) return NULL;
+
+    return &tracedSquare;
 }
 
 bool landingOnIllegalSquare(int x, int y, int screenX, int screenY) {
@@ -88,6 +95,19 @@ bool landingOnIllegalSquare(int x, int y, int screenX, int screenY) {
     return outOfBounds || landedOnInitialPosition;
 }
 
+void setLatestMove(int prevX, int prevY, int currX, int currY) {
+    latestMove.moveFromSquare.x = prevX;
+    latestMove.moveFromSquare.y = prevY;
+
+    latestMove.moveToSquare.x = currX;
+    latestMove.moveToSquare.y = currY;
+}
+
+LatestMove* getLatestMove() {
+
+    return &latestMove;
+}
+
 void settlePieceOnSquareFromUI(int x, int y) {
     if(currentSelectedSquare == NULL) return;
 
@@ -96,6 +116,8 @@ void settlePieceOnSquareFromUI(int x, int y) {
     Piece* currentPiece = currentSelectedSquare->piece;
 
     int previousPosition = currentSelectedSquare->index;
+
+    Coordinates prevCoords = transformToScreenCoordinates(previousPosition % 8, previousPosition / 8);
 
     if(!landingOnIllegalSquare(boardCoords.x, boardCoords.y, x, y)) {
 
@@ -109,6 +131,8 @@ void settlePieceOnSquareFromUI(int x, int y) {
 
         currentPiece->rectangle.x = screenCoords.x;
         currentPiece->rectangle.y = screenCoords.y;
+
+        setLatestMove(prevCoords.x, prevCoords.y, screenCoords.x, screenCoords.y);
     }
     else {
         Coordinates prevCoords = transformToScreenCoordinates(previousPosition % 8, previousPosition / 8);
@@ -120,6 +144,8 @@ void settlePieceOnSquareFromUI(int x, int y) {
     currentSelectedSquare->isSelected = false;
     
     currentSelectedSquare = NULL;
+    tracedSquare.x = -100; 
+    tracedSquare.y = -100; 
 }
 
 Piece* generatePiece(PieceType type, Color clr, int x, int y) {

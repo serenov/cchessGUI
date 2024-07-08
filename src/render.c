@@ -11,16 +11,33 @@
 SDL_Texture* pieceSprites = NULL; 
 SDL_Texture* chessboardTexture = NULL; 
 SDL_Texture* selectedBgTile = NULL; 
+SDL_Texture* hoveredBgTile = NULL; 
+SDL_Texture* latestMoveTile = NULL;
 
 void initTextures(SDL_Renderer* renderer) {
+    SDL_Cursor* cursor;
+    cursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_HAND);
+    SDL_SetCursor(cursor);
+
     pieceSprites = loadTexture(SPRITES_PATH, renderer);
     chessboardTexture = loadTexture(CHESSBOARD_IMAGE_PATH, renderer);
+    hoveredBgTile = loadTexture(HOVER_BG, renderer);
 
     SDL_Surface* surface = SDL_CreateRGBSurface(0, UNIT, UNIT, 32, 0x00FF0000, 0x0000FF00, 0x000000FF, 0xFF000000);
-    Uint32 greyishGreen = SDL_MapRGB(surface->format, 169, 169, 129);
-    SDL_FillRect(surface, NULL, greyishGreen);
 
+    Uint32 green = SDL_MapRGB(surface->format, 129, 150, 105);
+    Uint32 lightGreen = SDL_MapRGB(surface->format, 155, 199, 0);
+
+    SDL_FillRect(surface, NULL, green);
     selectedBgTile  = SDL_CreateTextureFromSurface(renderer, surface);
+
+    SDL_FillRect(surface, NULL, lightGreen);
+    latestMoveTile  = SDL_CreateTextureFromSurface(renderer, surface);
+
+    SDL_SetTextureBlendMode(latestMoveTile, SDL_BLENDMODE_BLEND);
+
+    // Set the alpha value for the transparent texture (50% transparency)
+    SDL_SetTextureAlphaMod(latestMoveTile, 128);
 
     SDL_FreeSurface(surface);
 }
@@ -99,19 +116,31 @@ void renderTheGame(SDL_Renderer* renderer) {
 
     SDL_RenderCopy(renderer, chessboardTexture, NULL, NULL);
 
+    SDL_Rect* tracedSquare = getTracedSquare();
     BoardSquare* currentSquare = getCurrentSqaure();
+
+    if (tracedSquare != NULL) {
+        SDL_RenderCopy(renderer, hoveredBgTile, NULL, tracedSquare);
+    }
+
+    if (currentSquare == NULL) {
+        LatestMove* latestMove = getLatestMove();
+
+        SDL_RenderCopy(renderer, latestMoveTile, NULL, &(latestMove->moveFromSquare));
+        SDL_RenderCopy(renderer, latestMoveTile, NULL, &(latestMove->moveToSquare));
+    }
 
     for (int i = 0; i < BOARD_LENGTH; i++) {
         
         BoardSquare* square = getSqaure(i % 8, i / 8);
 
         
-        Piece* currPiece = square->piece;
+        Piece* pieceAtSquare = square->piece;
         
 
-        if(currPiece != NULL && !square->isSelected) {
+        if(pieceAtSquare != NULL && !square->isSelected) {
 
-            SDL_RenderCopy(renderer, pieceSprites, getClipRectForPiece(currPiece), &(currPiece->rectangle));
+            SDL_RenderCopy(renderer, pieceSprites, getClipRectForPiece(pieceAtSquare), &(pieceAtSquare->rectangle));
         }
 
     }
