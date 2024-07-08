@@ -28,9 +28,12 @@ include_directories(${SDL2_INCLUDE_DIRS})
 find_package(SDL2_image REQUIRED)
 include_directories(${SDL2_IMAGE_INCLUDE_DIRS})
 
+find_library(CCHESS_LIBRARY cchess PATHS /usr/local/lib)
+
 # Add the executable
 add_executable(${PROJECT_NAME} ${SOURCES})
 
 # Manually specify libraries
-target_link_libraries(${PROJECT_NAME} -lSDL2 -lSDL2_image)
+target_link_libraries(${PROJECT_NAME} -lSDL2 -lSDL2_image ${CCHESS_LIBRARY})
+
 
