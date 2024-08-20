@@ -44,9 +44,19 @@ bool ccInterfacePlayMove(int from, int to, char promotionToPiece) {
         return false;
     }
 
+    printf("isKingSafe: %d\n", isKingSafe());
+
     return true;
 }
 
-Bitboard ccInterfaceListMoves(int position) {
-    return getAllowedSquares(position);
+bool ccInterfaceIsLegal(int from, int to) {
+    return isLegalMove(from, to);
+}
+
+MoveType ccInterfaceLatestMoveType() {
+    return getLatestMoveType();
+}
+
+Color ccGetColor(bool isFriendly) {
+    return getColor(isFriendly);
 }

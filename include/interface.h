@@ -4,4 +4,6 @@
 
 void ccInterfaceInit (); 
 bool ccInterfacePlayMove(int from, int to, char promotionToPiece); 
-Bitboard ccInterfaceListMoves(int position); 
+bool ccInterfaceIsLegal(int from, int to); 
+MoveType ccInterfaceLatestMoveType(); 
+Color ccGetColor(bool isFriendly);

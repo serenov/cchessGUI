@@ -2,6 +2,7 @@
 #include "config.h"
 #include "piece.h"
 #include "utils.h"
+#include "interface.h"
 
 #include <stdbool.h>
 
@@ -92,7 +93,9 @@ bool landingOnIllegalSquare(int x, int y, int screenX, int screenY) {
 
     bool landedOnInitialPosition = (position == currentSelectedSquare->index);
 
-    return outOfBounds || landedOnInitialPosition;
+    bool illegalSquare = !(ccInterfaceIsLegal(currentSelectedSquare->index, position));
+
+    return outOfBounds || landedOnInitialPosition || illegalSquare;
 }
 
 void setLatestMove(int prevX, int prevY, int currX, int currY) {
@@ -116,7 +119,6 @@ void settlePieceOnSquareFromUI(int x, int y) {
     Piece_GUI* currentPiece = currentSelectedSquare->piece;
 
     int previousPosition = currentSelectedSquare->index;
-
     Coordinates prevCoords = transformToScreenCoordinates(previousPosition % 8, previousPosition / 8);
 
     if(!landingOnIllegalSquare(boardCoords.x, boardCoords.y, x, y)) {
@@ -133,10 +135,36 @@ void settlePieceOnSquareFromUI(int x, int y) {
         currentPiece->rectangle.y = screenCoords.y;
 
         setLatestMove(prevCoords.x, prevCoords.y, screenCoords.x, screenCoords.y);
+
+        ccInterfacePlayMove(previousPosition, boardCoords.y * 8 + boardCoords.x, ' ');
+
+        if (ccInterfaceLatestMoveType() == EnpassantMove) {
+
+           Color previousTurnColor = ccGetColor(false);
+
+           int enpassantY = (previousTurnColor == white)? -1: 1;
+
+           destroyPieceOnSquare(boardCoords.x, boardCoords.y + enpassantY);
+        }
+        
+
+        // switch (ccInterfaceLatestMoveType())
+        // {
+        // case RegularMove:
+        //     printf("It is a regular move!!!!\n");
+        //     break;
+
+        // case EnpassantMove:
+        //     printf("It is an Enpassant move.\n");
+        //     break;
+
+        // default:
+        //     printf("It is an unknown move don't know what went wrong.\n");
+        //     break;
+        // }
+
     }
     else {
-        Coordinates prevCoords = transformToScreenCoordinates(previousPosition % 8, previousPosition / 8);
-
         currentPiece->rectangle.x = prevCoords.x;
         currentPiece->rectangle.y = prevCoords.y; 
     }

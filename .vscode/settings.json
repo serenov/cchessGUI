@@ -4,6 +4,9 @@
         "render.h": "c",
         "config.h": "c",
         "board.h": "c",
-        "piece.h": "c"
+        "piece.h": "c",
+        "engine.h": "c",
+        "pieces.structs.h": "c",
+        "boards.structs.h": "c"
     }
 }
